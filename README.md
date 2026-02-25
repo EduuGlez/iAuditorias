@@ -1,6 +1,6 @@
 # iAuditorías — Prueba Técnica Frontend
 
-Módulo de gestión de auditorías construido como SPA con **React 18 + TypeScript**, **React Router v6**, **Tailwind CSS** y una API simulada con comportamiento realista.
+Módulo de gestión de auditorías construido con **React 18 + TypeScript**, **React Router v6**, **Tailwind CSS** y una API simulada con comportamiento realista.
 
 ---
 
@@ -18,16 +18,6 @@ Abre `http://localhost:5173` en el navegador.
 
 ---
 
-## Scripts disponibles
-
-| Script | Descripción |
-|---|---|
-| `npm run dev` | Servidor de desarrollo con hot reload |
-| `npm run build` | Build de producción |
-| `npm run preview` | Previsualizar el build de producción |
-
----
-
 ## Decisiones técnicas
 
 ### Stack elegido
@@ -39,22 +29,22 @@ Abre `http://localhost:5173` en el navegador.
 ### Arquitectura
 ```
 src/
-├── pages/            # Pantallas principales (AuditsPage, CreateAuditPage, AuditDetailPage)
+├── pages/         
 ├── components/
-│   ├── layout/       # AppLayout, sidebar, topbar, breadcrumb
-│   └── ui/           # Componentes reutilizables: Badge, Button, Card, ProgressBar, Toast...
+│   ├── layout/     
+│   └── ui/           
 ├── services/
-│   └── api.ts        # Capa de datos: simula latencia, errores aleatorios y paginación
+│   └── api.ts       
 ├── types/
-│   └── index.ts      # Tipos TypeScript compartidos (Audit, Check, Template...)
+│   └── index.ts     
 └── data/
-    └── mockData.ts   # Dataset: 60 auditorías, 10 responsables, 8 plantillas
+    └── mockData.ts 
 ```
 
-La capa `services/api.ts` actúa como si fuera un backend real: expone funciones async (`getAudits`, `createAudit`, `runAudit`…) con el mismo contrato que tendría una API REST. Cambiar de mocks a un backend real solo requiere modificar ese fichero.
+La capa `services/api.ts` actúa como si fuera un backend real: expone funciones async (`getAudits`, `createAudit`, `runAudit`…) igual que se haría con una API REST.
 
 ### Filtros en la URL
-Todos los filtros (búsqueda, estado, proceso, responsable, ordenación y página) viven en los query params de la URL (`?q=ISO&status=DRAFT&page=2`). Esto permite compartir una búsqueda, usar el botón atrás del navegador y mantener el estado al recargar.
+Todos los filtros se encuentran en los query params de la URL (`?q=ISO&status=DRAFT&page=2`). Esto permite compartir una búsqueda, usar el botón atrás del navegador y mantener el estado al recargar.
 
 ### Simulación de ejecución
 Al pulsar "Ejecutar auditoría", la función `simulateExecution` itera sobre los checks aplicando delays variables y transiciones de estado (`QUEUED → RUNNING → OK/KO`). El detalle de la auditoría hace polling cada 800ms usando `getAuditFromStore`, que lee el store directamente sin pasar por `maybeThrow`, evitando fallos aleatorios durante la ejecución en curso.
@@ -109,12 +99,11 @@ Configuración en `services/api.ts`:
 
 ---
 
-## Mejoras pendientes (si hubiera más tiempo)
+## Mejoras pendientes
 
 - **Guardar evidencia en servidor**: el textarea de evidencia actualiza estado local pero no llama a `updateCheck` con el texto escrito.
-- **Paginación con elipsis**: el paginador actual muestra máximo 7 páginas sin indicación de que hay más.
 - **Breadcrumb dinámico**: mostrar el nombre real de la auditoría en lugar de "Detalle".
 - **Endpoint de usuarios**: cargar los responsables dinámicamente en lugar de tenerlos hardcodeados.
-- **Tests**: 2–3 tests unitarios de `api.ts` (filtrado, paginación, simulación de errores) y un smoke test E2E del flujo de creación.
+- **Tests**: 2–3 tests unitarios de `api.ts`.
 - **Modo offline**: cachear el último listado en `localStorage` y mostrar un aviso si la API falla.
 - **WebSockets**: reemplazar el polling de 800ms por eventos push para la actualización del progreso.
