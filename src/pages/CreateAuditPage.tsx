@@ -18,22 +18,23 @@ const STEP_LABELS = ['Datos básicos', 'Selección de plantilla']
 
 export default function CreateAuditPage() {
   const navigate = useNavigate()
-  const [step, setStep] = useState(0)
+  const [step, setStep] = useState(0) // Almacenamos en que paso de la creación estamos
 
-  // Step 1
+  // Paso 1
   const [form, setForm] = useState<Step1Data>({ name: '', process: '', ownerId: '', targetDate: '' })
   const [errors, setErrors] = useState<Partial<Step1Data>>({})
 
-  // Step 2
+  // Paso 2
   const [templates, setTemplates] = useState<Template[]>([])
   const [templatesLoading, setTemplatesLoading] = useState(false)
   const [templatesError, setTemplatesError] = useState<string | null>(null)
   const [selectedTemplateId, setSelectedTemplateId] = useState('')
 
-  // Submit
+  // Envío de la auditoría
   const [submitting, setSubmitting] = useState(false)
   const [submitError, setSubmitError] = useState<string | null>(null)
 
+  // Carga de las plantillas
   useEffect(() => {
     if (step === 1) fetchTemplates()
   }, [step])
@@ -66,6 +67,8 @@ export default function CreateAuditPage() {
     if (validate()) setStep(1)
   }
 
+  // Seleccionar la plantilla
+  // Las plantillas se muestran como tarjetas
   async function handleSubmit() {
     if (!selectedTemplateId) return
     setSubmitting(true)
@@ -79,7 +82,7 @@ export default function CreateAuditPage() {
         targetDate: form.targetDate,
         templateId: selectedTemplateId,
       })
-      navigate(`/audits/${audit.id}`, { replace: true })
+      navigate(`/audits/${audit.id}`, { replace: true }) // Envío de la auditoría
     } catch (err) {
       setSubmitError(err instanceof ApiError ? err.message : 'Error al crear la auditoría')
     } finally {
@@ -89,7 +92,7 @@ export default function CreateAuditPage() {
 
   return (
     <div className="p-6 max-w-3xl mx-auto animate-fade-in">
-      {/* Header */}
+      {/* Cabecera */}
       <div className="flex items-center gap-3 mb-6">
         <Button variant="ghost" size="sm" icon={<ArrowLeft size={15} />} onClick={() => navigate('/audits')}>
           Atrás
@@ -101,7 +104,7 @@ export default function CreateAuditPage() {
         <p className="text-sand-500 text-sm mt-1">Completa los pasos para crear una nueva auditoría</p>
       </div>
 
-      {/* Stepper */}
+      {/* Pasos para completar la creación de la auditoría */}
       <div className="flex items-center gap-0 mb-8">
         {STEP_LABELS.map((label, i) => (
           <div key={i} className="flex items-center">
@@ -109,9 +112,9 @@ export default function CreateAuditPage() {
               <div
                 className={clsx(
                   'w-8 h-8 rounded-full flex items-center justify-center text-sm font-semibold transition-all',
-                  i < step ? 'bg-blue-600 text-white' :
-                  i === step ? 'bg-blue-600 text-white ring-4 ring-blue-100' :
-                  'bg-sand-200 text-sand-400'
+                  i < step ? 'bg-blue-600 text-white' : // paso completado
+                  i === step ? 'bg-blue-600 text-white ring-4 ring-blue-100' : // paso actual
+                  'bg-sand-200 text-sand-400' // paso futuro
                 )}
               >
                 {i < step ? <Check size={14} /> : i + 1}
@@ -132,7 +135,7 @@ export default function CreateAuditPage() {
         ))}
       </div>
 
-      {/* Step content */}
+      {/* Contenido del paso que este activo en cada momento. Renderiza una cosa u otra según el step */}
       {step === 0 && (
         <Card className="p-6 animate-slide-up">
           <h2 className="font-serif text-xl text-sand-900 mb-5">Datos básicos</h2>
@@ -179,7 +182,6 @@ export default function CreateAuditPage() {
           </div>
         </Card>
       )}
-
       {step === 1 && (
         <div className="animate-slide-up">
           <Card className="p-6 mb-4">
@@ -236,6 +238,11 @@ export default function CreateAuditPage() {
   )
 }
 
+/**
+ * Componente que representa cada plantilla en el paso 2
+ * @param param0 
+ * @returns 
+ */
 function TemplateCard({
   template, selected, onSelect,
 }: {
