@@ -21,10 +21,10 @@ Abre `http://localhost:5173` en el navegador.
 ## Decisiones técnicas
 
 ### Stack elegido
-- **React 18 + TypeScript** — tipado estricto en modelos, props y respuestas de API, lo que reduce errores en runtime y hace el código más mantenible.
-- **React Router v6** — enrutado declarativo con soporte de `useSearchParams`, clave para persistir filtros en la URL.
-- **Tailwind CSS** — utilidades atómicas que permiten iterar rápido en la UI sin salir del JSX. Paleta personalizada (sand, coral, sage) definida en `tailwind.config.js`.
-- **Vite** — build tool moderno, arranque instantáneo y HMR muy rápido.
+- **React 18 + TypeScript** — Vengo de trabajar principalmente con Vue y Laravel, donde TypeScript lo he usado de forma habitual tanto en el frontend como en la capa de servicios. Cuando encaré esta prueba con React, mantener TypeScript era una decisión natural: los tipos en los modelos (Audit, Check, AuditStatus) me dieron seguridad mientras aprendía los patrones propios de React, porque el compilador avisaba de errores que de otra forma habrían aparecido en runtime. Fue especialmente útil al tipar las respuestas de la API simulada, donde sin tipos es fácil perder de vista qué forma tienen los datos en cada punto del flujo.
+- **React Router v6** — En Vue usaba Vue Router, así que el concepto de enrutado declarativo no era nuevo. Lo que sí fue diferente fue useSearchParams, que no tiene un equivalente directo tan cómodo en Vue Router. Lo usé para persistir los filtros del listado en la URL porque en proyectos anteriores con Laravel había visto lo útil que es que una búsqueda sea compartible y que el botón atrás funcione correctamente, algo que se pierde si el estado de los filtros vive solo en memoria.
+- **Tailwind CSS** — Lo había usado ya en proyectos Laravel con Blade y me resultó cómodo trasladarlo a JSX. La diferencia es que en React el componente y sus estilos viven en el mismo fichero, lo que en Tailwind funciona bastante bien porque no necesitas saltar entre archivos para ajustar un espaciado. Definí una paleta propia para no depender de los colores por defecto, que habrían dado un resultado demasiado genérico.
+- **Vite** — En los proyectos Vue ya trabajaba con Vite, así que fue la opción obvia. No tuve que aprender nada nuevo y el comportamiento es prácticamente idéntico al que conocía.
 
 ### Arquitectura
 ```
